@@ -1,3 +1,6 @@
 <div *ngFor="let job of jobs">
-  {{job.title}}
+    {{job.title}}
+    <div>
+        Parue il y a {{job.publishdate | daysAgo}}
+    </div>
 </div>

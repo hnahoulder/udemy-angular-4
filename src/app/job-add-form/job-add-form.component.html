@@ -1,0 +1,89 @@
+<div class="panel-body">
+    <form [formGroup]="form" (ngSubmit)="createJob(form.value)">
+        <div class="form-group col-sm-6">
+            <label for="title">Titre</label>
+            <input type="text"
+                   name="title"
+                   class="form-control"
+                   placeholder="Titre de votre annonce"
+                   formControlName="title"
+            >
+            <label for="company">Entreprise</label>
+            <input type="text"
+                   name="company"
+                   class="form-control"
+                   placeholder="Titre de votre enreprise"
+                   formControlName="company"
+            >
+            <label for="company">Ville</label>
+            <input type="text"
+                   name="city"
+                   class="form-control"
+                   placeholder="Ville du poste proposée"
+                   formControlName="city"
+            >
+            <label for="zipcode">Code postal</label>
+            <input type="text"
+                   name="zipcode"
+                   class="form-control"
+                   placeholder="Code postal"
+                   formControlName="zipcode"
+            >
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="description">Description</label>
+            <textarea name="description" id="" cols="30" rows="10" formControlName="description"></textarea>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="contract">Contrat</label>
+            <select name="contract" formControlName="contract">
+                <option *ngFor="let ct of contractTypes" [value]="ct.value">{{ct.name}}</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-12">
+            <input type="text"
+                   name="salary"
+                   class="small-text"
+                   placeholder="Salaire"
+                   formControlName="salary">
+            <select name="currency" class="currency" formControlName="currency">
+                <option *ngFor="let curr of currencies" [value]="curr.value">{{curr.name}}</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="experience">Expérience</label>
+            <select name="experience" formControlName="experience">
+                <option *ngFor="let exp of experience" [value]="exp.value">{{exp.name}}</option>
+            </select>
+            <label for="status">Statut</label>
+            <select name="status" formControlName="status">
+                <option *ngFor="let status of statuses" [value]="status.value">{{status.name}}</option>
+            </select>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <label for="area">Déplacement</label>
+            <div *ngFor="let area of areas">
+
+                <input type="radio"
+                       [id]="area.value"
+                       name="area"
+                       [value]="area.value"
+                       formControlName="area"
+                >
+                <label [for]='"btn-" + area.value'>{{area.name}}</label>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <label for="startdate">Date de démarrage</label>
+            <input type="date"
+                    name="startdate"
+                    formControlName="startdate">
+        </div>
+
+        <div class="class form-group col-sm-12">
+            <button class="btn btn-success" type="submit">Créer l'annonce</button>
+        </div>
+    </form>
+</div>
