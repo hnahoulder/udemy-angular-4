@@ -6,6 +6,10 @@ let data = require('./jobs');
 let initialJobs = data.jobs;
 let addedJobs = [];
 
+const fakeUser = {email: 'sm@test.fr', password: 'aze'};
+const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
+const jwt = require('jsonwebtoken');
+
 const getAllJobs = () => {
     return [...addedJobs, ...initialJobs];
 }
@@ -21,6 +25,24 @@ app.use((req, res, next) => {
 
 
 const api = express.Router();
+const auth = express.Router();
+
+auth.post('/login', (req, res) => {
+    if (req.body) {
+        const email = req.body.email.toLocaleLowerCase();
+        const password = req.body.password.toLocaleLowerCase();
+        if (email === fakeUser.email && password === fakeUser.password) {
+            delete req.body.password;
+            // res.json({success: true, data: req.body});
+            const token = jwt.sign({iss: 'http://localhost:4201', role: 'admin'}, secret);
+            res.json({success: true, token});
+        } else {
+            res.json({success: false, message: 'Identifiant incorrect'});
+        }
+    } else {
+        res.json({success: false, message: 'Donnéees manquantes'});
+    }
+});
 
 api.get('/jobs', (req, res) => {
     // res.json(data.jobs);
@@ -48,7 +70,7 @@ api.get('/search/:term/:place?', (req, res) => {
     const term = req.params.term.toLowerCase().trim();
     let place = req.params.place;
     let jobs = getAllJobs().filter(j => (j.description.toLowerCase().includes(term) || j.title.toLowerCase().includes(term)));
-    if(place){
+    if (place) {
         place = place.toLowerCase().trim();
         jobs = jobs.filter(j => j.city.toLowerCase().includes(place));
     }
@@ -56,6 +78,8 @@ api.get('/search/:term/:place?', (req, res) => {
 });
 
 app.use('/api', api);
+app.use('/auth', auth);
+
 
 const port = 4201;
 

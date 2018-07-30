@@ -53,4 +53,9 @@ export class JobService {
         return this.http.get(this.BASE_URL + `api/search/${criteria.term}/${criteria.place}`);
     }
 
+    login(formData) {
+        return this.http.post(this.BASE_URL + `api/login`, formData);
+    }
+
+
 }
