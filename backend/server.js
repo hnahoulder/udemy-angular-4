@@ -37,8 +37,22 @@ api.post('/jobs', (req, res) => {
 api.get('/jobs/:id', (req, res) => {
     const id = parseInt(req.params.id, 10);
     const job = getAllJobs().filter(j => j.id === id);
-    job.length === 1 ? res.json({success: true, job: job[0]}): res.json({success: false, message : `Pas de job ayant pour id ${id}`});
+    job.length === 1 ? res.json({success: true, job: job[0]}) : res.json({
+        success: false,
+        message: `Pas de job ayant pour id ${id}`
+    });
     // res.json(job);
+});
+
+api.get('/search/:term/:place?', (req, res) => {
+    const term = req.params.term.toLowerCase().trim();
+    let place = req.params.place;
+    let jobs = getAllJobs().filter(j => (j.description.toLowerCase().includes(term) || j.title.toLowerCase().includes(term)));
+    if(place){
+        place = place.toLowerCase().trim();
+        jobs = jobs.filter(j => j.city.toLowerCase().includes(place));
+    }
+    res.json({success: true, jobs: jobs});
 });
 
 app.use('/api', api);
