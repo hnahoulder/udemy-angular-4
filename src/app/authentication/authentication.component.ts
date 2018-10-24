@@ -15,6 +15,7 @@ export class AuthenticationComponent implements OnInit {
     }
 
     login(formData) {
+        console.log(formData);
         this.authService.login(formData)
             .subscribe(data => this.handleLoginSuccess,
                 error => this.handleLoginFailure);
