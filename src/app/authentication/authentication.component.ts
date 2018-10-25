@@ -15,7 +15,7 @@ export class AuthenticationComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (localStorage.getItem('jbb-data')) {
+        if (this.authService.userIsLoggedIn()) {
             this.refreshFlags();
         }
     }
