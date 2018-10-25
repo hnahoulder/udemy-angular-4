@@ -1,1 +1,2 @@
-<pre *ngIf="decodedToken">{{decodedToken |json}}</pre>
+<ng-container><pre *ngIf="decodedToken">{{decodedToken |json}}</pre></ng-container>
+<ng-container><pre *ngIf="!decodedToken">Aucune donnée trouvée</pre></ng-container>

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../services/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-register',
@@ -8,7 +9,7 @@ import {AuthService} from '../services/auth.service';
 })
 export class RegisterComponent implements OnInit {
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService, private router: Router) {
     }
 
     ngOnInit() {
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
 
     handleRegisterSuccess(data) {
         console.log('Success ', data);
-        localStorage.setItem('jbb-data', JSON.stringify(data));
+        // localStorage.setItem('jbb-data', JSON.stringify(data));
+        this.router.navigate(['/']);
     }
 
     handleRegisterFailure(error) {
