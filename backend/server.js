@@ -25,7 +25,9 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.set('Content-Type', 'application/json');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    // res.header("Access-Control-Allow-Headers: Content-Type");
     next();
 });
 
@@ -60,7 +62,7 @@ auth.post('/login', (req, res) => {
 });
 
 auth.post('/register', (req, res) => {
-    console.log('requ.boyd: ', req.body);
+    console.log('req.body: ', req.body);
     if (req.body) {
         const email = req.body.email.toLocaleLowerCase().trim();
         const password = req.body.password.toLocaleLowerCase().trim();
@@ -72,22 +74,29 @@ auth.post('/register', (req, res) => {
     }
 });
 
-api.get('/jobs', (req, res) => {
-    // res.json(data.jobs);
-    res.json(getAllJobs());
-});
-
 const checkUserToken = (req, res, next) => {
 // Authorization: bearer +token
-    if (!req.header('authorization')) {
+    if (!req.header('Authorization')) {
         return res.status(401).json({success: false, message: "Header d'uathentifaction manguant"});
     }
     const authorisationParts = req.header('authorization').split(' ');
     let token = authorisationParts[1];
-    const decodedToken = jwt.verify(token, secret);
-    console.log('decodedToken ', decodedToken);
-    next();
+    jwt.verify(token, secret, (err, decodedToken) => {
+        if (err) {
+            console.log(err)
+            return res.status(401).json({success: false, message: 'Token non valide'});
+        } else {
+            console.log('decodedToken ', decodedToken);
+            next();
+        }
+    });
+
 };
+
+api.get('/jobs', checkUserToken, (req, res) => {
+    // res.json(data.jobs);
+    res.json(getAllJobs());
+});
 
 api.post('/jobs', checkUserToken, (req, res) => {
     const job = req.body;

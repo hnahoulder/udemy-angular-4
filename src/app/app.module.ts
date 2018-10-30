@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {TokenInterceptor} from './authentication/token.interceptor';
 
 
 import {AppComponent} from './app.component';
@@ -58,7 +60,12 @@ const routes = [
         ReactiveFormsModule,
         RouterModule.forRoot(routes)
     ],
-    providers: [JobService, AuthService],
+    providers: [JobService, AuthService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        }],
     bootstrap: [AppComponent]
 })
 export class AppModule {

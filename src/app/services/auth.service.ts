@@ -31,4 +31,12 @@ export class AuthService {
     decodeToken(token) {
         return jwtDecode(token);
     }
+
+    getToken() {
+        if (this.userIsLoggedIn()) {
+            return JSON.parse(localStorage.getItem('jbb-data')).token;
+        } else {
+            return '';
+        }
+    }
 }
