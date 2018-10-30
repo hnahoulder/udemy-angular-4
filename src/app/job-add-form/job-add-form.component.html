@@ -1,4 +1,4 @@
-<div class="panel-body">
+<div class="panel-body" *ngIf="userIsLoggedIn">
     <form [formGroup]="form" (ngSubmit)="createJob(form.value)">
         <div class="form-group col-sm-6">
             <label for="title">Titre</label>
@@ -15,7 +15,7 @@
                    placeholder="Titre de votre enreprise"
                    formControlName="company"
             >
-            <label for="company">Ville</label>
+            <label for="city">Ville</label>
             <input type="text"
                    name="city"
                    class="form-control"
@@ -86,4 +86,14 @@
             <button class="btn btn-success" type="submit">Créer l'annonce</button>
         </div>
     </form>
+</div>
+<div *ngIf="!userIsLoggedIn">
+    <h2>Création d'annonces réservée aux utilisateurs inscrits</h2>
+    <div>
+        Vous devez être connecté pour créer une annonce
+        <br>
+        <a href="#" routerLink="/login">Se connecter </a>
+        ou
+        <a href="#" routerLink="/register">Créer un compte</a>
+    </div>
 </div>

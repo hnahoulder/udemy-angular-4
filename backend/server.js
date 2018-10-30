@@ -6,15 +6,19 @@ let data = require('./jobs');
 let initialJobs = data.jobs;
 let addedJobs = [];
 
-let users = [{id: 1, email: 'sm@test.fr', password: 'aze', nickname: 'Tutu'}];
+let users = [
+    {id: 1, email: 'tu@test.fr', password: 'aze', nickname: 'Tutu', role: 'admin'},
+    {id: 2, email: 'tu2@test.fr', password: 'qsd', nickname: 'Tutu2', role: 'user'},
+];
 
 // const fakeUser = {id: 1, email: 'sm@test.fr', password: 'aze', nickname: 'Tutu'};
 const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 const jwt = require('jsonwebtoken');
 
+
 const getAllJobs = () => {
     return [...addedJobs, ...initialJobs];
-}
+};
 
 
 app.use(bodyParser.json());
@@ -38,7 +42,14 @@ auth.post('/login', (req, res) => {
             // if (email === fakeUser.email && password === fakeUser.password) {
             // delete req.body.password;
             // res.json({success: true, data: req.body});
-            const token = jwt.sign({iss: 'http://localhost:4201', role: 'admin', email: req.body.email}, secret);
+            let user = users[index];
+            let token = '';
+            if (user.email === 'tu@test.fr') {
+                token = jwt.sign({iss: 'http://localhost:4201', role: 'admin', email: req.body.email}, secret);
+            }
+            else {
+                token = jwt.sign({iss: 'http://localhost:4201', role: 'user', email: req.body.email}, secret);
+            }
             res.json({success: true, token});
         } else {
             res.status(401).json({success: false, message: 'Identifiant incorrect'});
@@ -66,7 +77,19 @@ api.get('/jobs', (req, res) => {
     res.json(getAllJobs());
 });
 
-api.post('/jobs', (req, res) => {
+const checkUserToken = (req, res, next) => {
+// Authorization: bearer +token
+    if (!req.header('authorization')) {
+        return res.status(401).json({success: false, message: "Header d'uathentifaction manguant"});
+    }
+    const authorisationParts = req.header('authorization').split(' ');
+    let token = authorisationParts[1];
+    const decodedToken = jwt.verify(token, secret);
+    console.log('decodedToken ', decodedToken);
+    next();
+};
+
+api.post('/jobs', checkUserToken, (req, res) => {
     const job = req.body;
     addedJobs = [job, ...addedJobs];
     console.log('Total nb of jobs: ', getAllJobs().length)

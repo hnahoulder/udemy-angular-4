@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {JobService} from '../services/job.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
     selector: 'app-job-add-form',
@@ -10,6 +11,7 @@ import {JobService} from '../services/job.service';
 export class JobAddFormComponent implements OnInit {
 
     form: FormGroup;
+    userIsLoggedIn = false;
     contractTypes = [
         {id: 1, name: 'Stage', value: 'internship'},
         {id: 2, name: 'Intérim', value: 'temp'},
@@ -41,7 +43,7 @@ export class JobAddFormComponent implements OnInit {
         {id: 4, name: 'Déplacements internationaux', value: 'international'}
     ];
 
-    constructor(private formBuilder: FormBuilder, private jobService: JobService) {
+    constructor(private formBuilder: FormBuilder, private jobService: JobService, private authService: AuthService) {
     }
 
     ngOnInit() {
@@ -69,6 +71,12 @@ export class JobAddFormComponent implements OnInit {
     createJob(jobData) {
         this.jobService.addJob(jobData).subscribe();
         this.form.reset();
+    }
+
+    checkUserIsLoggedIn() {
+        if (this.authService.userIsLoggedIn()) {
+            this.userIsLoggedIn = true;
+        }
     }
 
 }

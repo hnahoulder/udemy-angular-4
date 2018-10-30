@@ -1,2 +1,4 @@
 <ng-container><pre *ngIf="decodedToken">{{decodedToken |json}}</pre></ng-container>
 <ng-container><pre *ngIf="!decodedToken">Aucune donnée trouvée</pre></ng-container>
+<div *ngIf="isAdmin"> Je suis tout puissant ! </div>
+<div *ngIf="!isAdmin"> Je suis un utilisateur de base </div>
